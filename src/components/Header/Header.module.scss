@@ -1,0 +1,23 @@
+header{
+    background-color: red;
+    display: flex;
+    justify-content: center;
+
+    .navigation{
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        align-items: center;
+
+        img{
+            width: 100px;
+        }
+
+        &__button{
+            cursor: pointer;
+            color: white;
+            align-items: center;
+            font-size: 24px;
+        }
+    }
+}   
