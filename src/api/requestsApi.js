@@ -20,7 +20,7 @@ export const fetchComics = async () => {
         ts,
         apikey: PUBLIC_KEY,
         hash,
-        limit: 100, 
+        limit: 30, 
       },
     });
     return response.data.data.results;
@@ -40,7 +40,7 @@ export const fetchCharacters = async () => {
         ts,
         apikey: PUBLIC_KEY,
         hash,
-        limit: 100, 
+        limit: 10, 
       },
     });
     return response.data.data.results;

@@ -8,7 +8,6 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="" element={<App />} />
-      <Route path="/commics" element={<Commics />} />
       <Route path="/characters" element={<Characters />} />
     </>
   )

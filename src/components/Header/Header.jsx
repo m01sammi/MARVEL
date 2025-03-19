@@ -8,7 +8,7 @@ export const Header = () => {
   const [activePage, setActivePage] = useState('');
 
   const handleClickCommics = () => {
-    navigate('/commics')
+    navigate('/')
     setActivePage('commics');
   }
 
