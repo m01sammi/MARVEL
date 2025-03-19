@@ -1,12 +1,11 @@
 header{
-    background-color: red;
+    background-color: #e62429;
     display: flex;
     justify-content: center;
 
     .navigation{
         display: flex;
         justify-content: space-between;
-        width: 80%;
         align-items: center;
 
         img{
@@ -15,9 +14,22 @@ header{
 
         &__button{
             cursor: pointer;
-            color: white;
+            color: black;
             align-items: center;
             font-size: 24px;
+
+            &:hover{
+                color: white;
+                text-shadow: 0px 10px 10px  white;
+                transition: color 0.3s ease, text-shadow 0.3s ease;
+            }
+
+            &__active{
+                cursor: pointer;
+                color: white;
+                align-items: center;
+                font-size: 24px;
+            }
         }
     }
 }   

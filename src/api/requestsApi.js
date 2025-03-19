@@ -20,12 +20,32 @@ export const fetchComics = async () => {
         ts,
         apikey: PUBLIC_KEY,
         hash,
-        limit: 10, 
+        limit: 100, 
       },
     });
     return response.data.data.results;
   } catch (error) {
     console.error("Ошибка при загрузке комиксов:", error);
+    return [];
+  }
+};
+
+export const fetchCharacters = async () => {
+  const ts = new Date().getTime(); 
+  const hash = generateHash(ts); 
+
+  try {
+    const response = await axios.get(`${BASE_URL}characters`, {
+      params: {
+        ts,
+        apikey: PUBLIC_KEY,
+        hash,
+        limit: 100, 
+      },
+    });
+    return response.data.data.results;
+  } catch (error) {
+    console.error("Ошибка при загрузке персонажей:", error);
     return [];
   }
 };

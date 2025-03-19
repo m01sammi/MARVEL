@@ -1,0 +1,17 @@
+.list{
+    margin: 50px 100px;
+
+    &__line{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+
+        &__card{
+            width: 40%;
+    
+            &__img{
+                width: 100%;
+            }
+        }
+    }
+}
