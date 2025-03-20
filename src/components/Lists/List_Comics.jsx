@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { fetchComics } from '../../api/requestsApi.js'; 
-import styles from './List_Commics.module.scss'
+import styles from './List_Comics.module.scss'
 import { MdError } from 'react-icons/md';
 import { HashLoader } from 'react-spinners';
+import { useDispatch, useSelector } from 'react-redux';
+import { setComicsId } from '../../redux/slices/comicsSlice.js';
+import { useNavigate } from 'react-router';
 
 
-export const List_Commics = () => {
+export const List_Comics = () => {
   const [comics, setComics] = useState([]); 
   const [visibleComics, setVisibleComics] = useState(6);
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(""); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const comicsId = useSelector((state) => state.comics.comicsId);
 
   useEffect(() => {
     const loadComics = async () => {
@@ -26,6 +32,11 @@ export const List_Commics = () => {
     loadComics();
   }, []);
 
+  const handleOpenComics = (id) => {
+    dispatch(setComicsId(id))
+    navigate(`/comics/${id}`)
+  }
+
   if (loading) return (
     <div className={styles.load}>
       <HashLoader color="black" height={4} width={100} loading={true} />
@@ -37,12 +48,6 @@ export const List_Commics = () => {
     setVisibleComics((prev) => prev + 6);
   };
 
-  const chunkedComics = [];
-  for (let i = 0; i < visibleComics; i += 3) {
-    chunkedComics.push(comics.slice(i, i + 3));
-  }
-
-  
   return (
     <div className={styles.list}>
       <div className={styles.list__line}>
@@ -53,7 +58,7 @@ export const List_Commics = () => {
           </div>
         ) : (
           comics.slice(0, visibleComics).map((comic) => (
-            <div key={comic.id} className={styles.list__line__card}>
+            <div key={comic.id} onClick={() => handleOpenComics(comic.id)} className={styles.list__line__card}>
               {comic.thumbnail ? (
                 <img className={styles.list__line__card__img}
                   src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}

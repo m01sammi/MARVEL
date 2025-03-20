@@ -4,12 +4,15 @@ import styles from './List_Characters.module.scss';
 import { MdError } from 'react-icons/md';
 import { HashLoader } from 'react-spinners';
 import classNames from "classnames";
+import { useSelector } from 'react-redux';
 
 export const List_Characters = () => {
   const [characters, setCharacters] = useState([]); 
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(""); 
   const [activeId, setActiveId] = useState(null);
+  const searchItem = useSelector((state) => state.search.searchItem).toLowerCase();
+  console.log(searchItem);
 
   useEffect(() => {
     const loadCharacters = async () => {
@@ -30,6 +33,10 @@ export const List_Characters = () => {
     setActiveId(activeId === id ? null : id);  
   }
 
+  const filteredCharacters = characters.filter(character => 
+    character.name.toLowerCase().includes(searchItem)
+  );
+
   if (loading) return (
     <div className={styles.load}>
       <HashLoader color="black" size={50} loading={true} />
@@ -45,12 +52,13 @@ export const List_Characters = () => {
 
   return (
     <div className={styles.list}>
-      <div className={styles.list__line}>
-        {characters.map((character) => (
-          <>
-            <div key={character.id} className={styles.list__line__card}>
-              <div onClick={() => handleShowInfo(character.id)}
-                className={ activeId === character.id ? styles.list__line__card__blockActive : styles.list__line__card__block}
+      {filteredCharacters.length > 0 ? (
+        filteredCharacters.map((character) => (
+          <div key={character.id} className={styles.list__line}>
+            <div className={styles.list__line__card}>
+              <div 
+                onClick={() => handleShowInfo(character.id)}
+                className={activeId === character.id ? styles.list__line__card__blockActive : styles.list__line__card__block}
               >
                 {character.thumbnail ? (
                   <img
@@ -64,8 +72,8 @@ export const List_Characters = () => {
                 <p className={styles.list__line__card__block__name}>{character.name}</p>
               </div>
             </div>
-            <div key={character.id} className={styles.list__line__info}>
-              {activeId === character.id && (
+            {activeId === character.id && (
+              <div className={styles.list__line__info}>
                 <div className={styles.list__line__info__block}>
                   {character.thumbnail ? (
                     <img
@@ -89,11 +97,16 @@ export const List_Characters = () => {
                       : "Нет информации"}
                   </p>
                 </div>
-              )}
-            </div>
-          </>
-        ))}
-      </div>
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div className={styles.list__error}>
+          <MdError size={50} color="red" />
+          <h1>Персонажи не найдены</h1>
+        </div>
+      )}
     </div>
   );
 };

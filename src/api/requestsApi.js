@@ -49,3 +49,22 @@ export const fetchCharacters = async () => {
     return [];
   }
 };
+
+export const fetchComicsById = async (comicsId) => {
+  const ts = new Date().getTime(); 
+  const hash = generateHash(ts); 
+
+  try {
+    const response = await axios.get(`${BASE_URL}comics/${comicsId}`, {
+      params: {
+        ts,
+        apikey: PUBLIC_KEY,
+        hash
+        },
+    });
+    return response.data.data.results;
+  } catch (error) {
+    console.error("Ошибка при загрузке персонажей:", error);
+    return [];
+  }
+};

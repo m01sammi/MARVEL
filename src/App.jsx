@@ -1,12 +1,12 @@
 import styles from './App.module.scss'
 import {Header} from './components/Header/Header.jsx'
-import {Commics} from './pages/Commics/Commics.jsx'
+import {Comics} from './pages/Comics/Comics.jsx'
 
 function App() {
 
   return (
     <>
-      <Commics/>
+      <Comics/>
     </>
   )
 }
