@@ -3,25 +3,39 @@ import { fetchCharacters } from '../../api/requestsApi';
 import styles from './List_Characters.module.scss';
 import { MdError } from 'react-icons/md';
 import { HashLoader } from 'react-spinners';
-import classNames from "classnames";
 import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
-export const List_Characters = () => {
-  const [characters, setCharacters] = useState([]); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(""); 
-  const [activeId, setActiveId] = useState(null);
-  const searchItem = useSelector((state) => state.search.searchItem).toLowerCase();
+interface Character {
+  id: number;
+  name: string;
+  description?: string;
+  thumbnail?: {
+    path: string;
+    extension: string;
+  };
+  comics: {
+    items: { name: string }[];
+  };
+}
+
+export const List_Characters: React.FC = () => {
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
+  const [activeId, setActiveId] = useState<number | null>(null);
+
+  const searchItem = useSelector((state: RootState) => state.search.searchItem).toLowerCase();
   console.log(searchItem);
 
   useEffect(() => {
     const loadCharacters = async () => {
       try {
         setLoading(true);
-        const data = await fetchCharacters();
-        setCharacters(data); 
+        const data: Character[] = await fetchCharacters();
+        setCharacters(data);
       } catch (error) {
-        setError("Не удалось загрузить персонажей");
+        setError('Не удалось загрузить персонажей');
       } finally {
         setLoading(false);
       }
@@ -29,26 +43,28 @@ export const List_Characters = () => {
     loadCharacters();
   }, []);
 
-  const handleShowInfo = (id) => {
-    setActiveId(activeId === id ? null : id);  
-  }
+  const handleShowInfo = (id: number): void => {
+    setActiveId(activeId === id ? null : id);
+  };
 
-  const filteredCharacters = characters.filter(character => 
+  const filteredCharacters = characters.filter((character) =>
     character.name.toLowerCase().includes(searchItem)
   );
 
-  if (loading) return (
-    <div className={styles.load}>
-      <HashLoader color="black" size={50} loading={true} />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className={styles.load}>
+        <HashLoader color="black" size={50} loading={true} />
+      </div>
+    );
 
-  if (error) return (
-    <div className={styles.error}>
-      <MdError size={50} color="red" />
-      <p>{error}</p>
-    </div>
-  );
+  if (error)
+    return (
+      <div className={styles.error}>
+        <MdError size={50} color="red" />
+        <p>{error}</p>
+      </div>
+    );
 
   return (
     <div className={styles.list}>
@@ -56,9 +72,13 @@ export const List_Characters = () => {
         filteredCharacters.map((character) => (
           <div key={character.id} className={styles.list__line}>
             <div className={styles.list__line__card}>
-              <div 
+              <div
                 onClick={() => handleShowInfo(character.id)}
-                className={activeId === character.id ? styles.list__line__card__blockActive : styles.list__line__card__block}
+                className={
+                  activeId === character.id
+                    ? styles.list__line__card__blockActive
+                    : styles.list__line__card__block
+                }
               >
                 {character.thumbnail ? (
                   <img
@@ -88,13 +108,13 @@ export const List_Characters = () => {
                     Имя: {character.name}
                   </p>
                   <p className={styles.list__line__info__block__description}>
-                    Описание: {character.description || "Нет описания"}
+                    Описание: {character.description || 'Нет описания'}
                   </p>
                   <p className={styles.list__line__info__block__comics}>
-                    Комиксы:{" "}
+                    Комиксы:{' '}
                     {character.comics.items.length > 0
-                      ? character.comics.items.map((comic) => comic.name).join(", ")
-                      : "Нет информации"}
+                      ? character.comics.items.map((comic) => comic.name).join(', ')
+                      : 'Нет информации'}
                   </p>
                 </div>
               </div>

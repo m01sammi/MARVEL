@@ -1,30 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { fetchComics } from '../../api/requestsApi.js'; 
-import styles from './List_Comics.module.scss'
+import { fetchComics } from '../../api/requestsApi'; 
+import styles from './List_Comics.module.scss';
 import { MdError } from 'react-icons/md';
 import { HashLoader } from 'react-spinners';
 import { useDispatch, useSelector } from 'react-redux';
-import { setComicsId } from '../../redux/slices/comicsSlice.js';
+import { setComicsId } from '../../redux/slices/comicsSlice';
 import { useNavigate } from 'react-router';
+import { RootState } from '../../redux/store';
 
+interface Comics {
+  id: number;
+  title: string;
+  thumbnail?: {
+    path: string;
+    extension: string;
+  };
+  prices?: { price: number }[];
+}
 
-export const List_Comics = () => {
-  const [comics, setComics] = useState([]); 
-  const [visibleComics, setVisibleComics] = useState(6);
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(""); 
+export const List_Comics: React.FC = () => {
+  const [comics, setComics] = useState<Comics[]>([]);
+  const [visibleComics, setVisibleComics] = useState<number>(6);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const comicsId = useSelector((state) => state.comics.comicsId);
+  const comicsId = useSelector((state: RootState) => state.comics.comicsId);
 
   useEffect(() => {
     const loadComics = async () => {
       try {
         setLoading(true);
-        const data = await fetchComics();
-        setComics(data); 
+        const data: Comics[] = await fetchComics();
+        setComics(data);
       } catch (error) {
-        setError("Не удалось загрузить комиксы");
+        setError('Не удалось загрузить комиксы');
       } finally {
         setLoading(false);
       }
@@ -32,21 +43,23 @@ export const List_Comics = () => {
     loadComics();
   }, []);
 
-  const handleOpenComics = (id) => {
-    dispatch(setComicsId(id))
-    navigate(`/comics/${id}`)
-  }
+  const handleOpenComics = (id: number): void => {
+    dispatch(setComicsId(id));
+    navigate(`/comics/${id}`);
+  };
 
-  if (loading) return (
-    <div className={styles.load}>
-      <HashLoader color="black" height={4} width={100} loading={true} />
-    </div>
-  );
-  if (error) return <p>{error}</p>;
-
-  const handleShowMore = () => {
+  const handleShowMore = (): void => {
     setVisibleComics((prev) => prev + 6);
   };
+
+  if (loading)
+    return (
+      <div className={styles.load}>
+        <HashLoader color="black" size={50} loading={true} />
+      </div>
+    );
+  
+  if (error) return <p>{error}</p>;
 
   return (
     <div className={styles.list}>
@@ -60,7 +73,8 @@ export const List_Comics = () => {
           comics.slice(0, visibleComics).map((comic) => (
             <div key={comic.id} onClick={() => handleOpenComics(comic.id)} className={styles.list__line__card}>
               {comic.thumbnail ? (
-                <img className={styles.list__line__card__img}
+                <img
+                  className={styles.list__line__card__img}
                   src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
                   alt={comic.title}
                 />
