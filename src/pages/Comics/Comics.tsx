@@ -6,7 +6,7 @@ export const Comics: React.FC = () => {
   return (
     <>
       <div className={styles.content}>
-        <div className={`col-sm-12 col-md-10 col-lg-8 ${styles.content__block}`}>
+        <div className={styles.content__block}>
           <List_Comics />
         </div>
       </div>

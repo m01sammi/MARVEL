@@ -4,16 +4,15 @@ interface ComicsInfo {
   title: string;
   description: string;
   image: string;
-  // Добавьте дополнительные поля, которые есть в объекте comicsInfo
 }
 
 interface ComicsState {
-  comicsId: string;
+  comicsId: number;
   comicsInfo: ComicsInfo | null; 
 }
 
 const initialState: ComicsState = {
-  comicsId: '',
+  comicsId: 0,
   comicsInfo: null,
 };
 
@@ -21,7 +20,7 @@ const comicsSlice = createSlice({
   name: 'comics',
   initialState,
   reducers: {
-    setComicsId: (state, action: PayloadAction<string>) => {
+    setComicsId: (state, action: PayloadAction<number>) => {
       state.comicsId = action.payload;
     },
     setComicsInfo: (state, action: PayloadAction<ComicsInfo | null>) => {

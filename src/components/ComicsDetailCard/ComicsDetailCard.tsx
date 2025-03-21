@@ -6,15 +6,12 @@ import { fetchComicsById } from "../../api/requestsApi";
 import { HashLoader } from "react-spinners";
 import { setComicsInfo } from "../../redux/slices/comicsSlice";
 import styles from "./ComicsDetailCard.module.scss";
+import { MdError } from "react-icons/md";
 
 interface Comics {
   id: number;
   title: string;
   description: string;
-  thumbnail: {
-    path: string;
-    extension: string;
-  };
 }
 
 export const ComicsDetailCard: React.FC = () => {
@@ -29,8 +26,12 @@ export const ComicsDetailCard: React.FC = () => {
 
       try {
         setLoading(true);
-        const data: Comics[] = await fetchComicsById(comicsId);
-        dispatch(setComicsInfo(data[0]));
+        const data = await fetchComicsById(comicsId);
+        if (data && Array.isArray(data) && data.length > 0) {
+          dispatch(setComicsInfo(data[0]));
+        } else {
+          setError("Комикс не найден");
+        }
       } catch (error) {
         setError("Ошибка загрузки информации о комиксе");
       } finally {
@@ -48,19 +49,19 @@ export const ComicsDetailCard: React.FC = () => {
         </div>
     );
 
-  if (error) return <p>{error}</p>;
+ if (error)
+     return (
+       <div className={styles.error}>
+         <MdError size={50} color="red" />
+         <p>{error}</p>
+       </div>
+     );
 
   return (
     <div className={styles.detailCard}>
       {comicsInfo && (
         <>
           <h2>{comicsInfo.title}</h2>
-          {comicsInfo.thumbnail && (
-            <img
-              src={`${comicsInfo.thumbnail.path}.${comicsInfo.thumbnail.extension}`}
-              alt={comicsInfo.title}
-            />
-          )}
           <p>{comicsInfo.description || "Описание отсутствует"}</p>
         </>
       )}

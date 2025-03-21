@@ -24,18 +24,12 @@ export const Header: React.FC = () => {
 
   return (
     <header>
-      <div className={`col-sm-12 col-md-10 col-lg-8 ${styles.navigation}`}>
+      <div className={styles.navigation}>
         <h1>Marvel information portal</h1>
-        <p 
-          className={activePage === 'comics' ? styles.navigation__button__active : styles.navigation__button} 
-          onClick={handleClickComics}
-        >
+        <p className={activePage === 'comics' ? styles.navigation__button__active : styles.navigation__button} onClick={handleClickComics}>
           Комиксы
         </p>
-        <p 
-          className={activePage === 'characters' ? styles.navigation__button__active : styles.navigation__button} 
-          onClick={handleClickCharacters}
-        >
+        <p className={activePage === 'characters' ? styles.navigation__button__active : styles.navigation__button} onClick={handleClickCharacters}>
           Персонажи
         </p>
         <img src={marvelLogo} alt="MARVEL" />
